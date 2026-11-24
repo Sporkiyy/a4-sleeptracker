@@ -1,0 +1,50 @@
+.history-filter {
+  width: auto;
+  margin: 8px 16px 0;
+}
+
+.hint {
+  margin: 8px 20px 0;
+  font-size: 0.8125rem;
+  color: var(--app-text-muted);
+}
+
+.day-heading {
+  margin: 20px 20px 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--app-text-muted);
+}
+
+.day-list {
+  margin-top: 8px;
+  border: 1px solid var(--app-border);
+
+  // Ionic's default iOS detail text is too faint to meet WCAG AA contrast.
+  ion-label p {
+    color: var(--app-text-secondary);
+  }
+}
+
+.entry-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: var(--app-night-icon-bg);
+  color: var(--app-night-icon);
+}
+
+.filter-empty {
+  margin: 24px;
+  text-align: center;
+  color: var(--app-text-muted);
+}
+
+.fab-spacer {
+  height: 88px;
+}

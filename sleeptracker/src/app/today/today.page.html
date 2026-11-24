@@ -1,0 +1,108 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Today</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="theme.toggle()">
+        <ion-icon slot="icon-only" [name]="theme.toggleIcon()" aria-hidden="true"></ion-icon>
+        <span class="sr-only">{{ theme.toggleLabel() }}</span>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<!-- forceOverscroll off: Ionic's iOS mode otherwise makes every page 1px scrollable, even when it all fits. -->
+<ion-content [fullscreen]="true" [forceOverscroll]="false">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Today</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <p class="page-intro">{{ greeting() }} · {{ dateLabel() }}</p>
+
+  @if (sleepingSince(); as since) {
+    <!-- While the sleep timer runs, show one calm, dark screen with one big action. -->
+    <section class="night-mode" aria-labelledby="night-heading">
+      <ion-icon class="night-moon" name="moon" aria-hidden="true"></ion-icon>
+      <h2 id="night-heading" class="eyebrow">Sleeping since {{ time(since) }}</h2>
+      <div class="hero-figure">{{ duration(elapsedMs()) }}</div>
+      @if (timerLooksForgotten()) {
+        <p class="callout callout-info">
+          <ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>
+          <span>Forgot to stop the timer? Tap "I'm awake" and fix your wake-up time before saving.</span>
+        </p>
+      }
+      <ion-button class="night-wake" expand="block" color="secondary" (click)="wakeUp()">
+        <ion-icon slot="start" name="sunny" aria-hidden="true"></ion-icon>
+        I'm awake
+      </ion-button>
+      <ion-button fill="clear" color="medium" (click)="cancelSleep()">Cancel sleep timer</ion-button>
+    </section>
+  } @else {
+    <ion-card class="app-card">
+      <ion-card-content>
+        <p class="eyebrow">Last night</p>
+        @if (lastNight(); as night) {
+          <div class="night-summary">
+            <div>
+              <div class="hero-figure">{{ night.durationString() }}</div>
+              <p class="card-text">{{ nightDetails(night) }}</p>
+            </div>
+            <ion-button fill="clear" size="small" (click)="editNight(night)">Edit</ion-button>
+          </div>
+        } @else {
+          <h2 class="card-title">How did you sleep?</h2>
+          <p class="card-text">Log it now, or start the timer when you go to bed tonight so there's nothing to remember.</p>
+        }
+        <div class="sleep-actions">
+          <ion-button fill="outline" (click)="logNight()">
+            <ion-icon slot="start" name="add" aria-hidden="true"></ion-icon>
+            Log sleep
+          </ion-button>
+          <ion-button (click)="startSleep()">
+            <ion-icon slot="start" name="moon" aria-hidden="true"></ion-icon>
+            Going to bed
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="app-card">
+      <ion-card-content>
+        <p class="eyebrow">Check in</p>
+        <h2 class="card-title" id="quick-scale-label">How sleepy do you feel right now?</h2>
+        <div class="quick-scale" role="group" aria-labelledby="quick-scale-label">
+          @for (level of levels; track level) {
+            <button type="button" class="quick-level sss-{{ level }}" [attr.aria-label]="level + ', ' + label(level)" (click)="checkIn(level)">
+              {{ level }}
+            </button>
+          }
+        </div>
+        <div class="quick-scale-ends" aria-hidden="true">
+          <span>1 · Wide awake</span>
+          <span>Nodding off · 7</span>
+        </div>
+
+        @if (todaysCheckIns().length) {
+          <h3 class="subhead">Today's check-ins</h3>
+          <ul class="check-in-list">
+            @for (entry of todaysCheckIns(); track entry.id) {
+              <li>
+                <button type="button" class="check-in-row" (click)="editCheckIn(entry)">
+                  <span class="sss-badge sss-{{ entry.loggedValue }}">{{ entry.loggedValue }}</span>
+                  <span class="check-in-text">
+                    <strong>{{ entry.label() }}</strong>
+                    @if (entry.context.length) {
+                      <span>{{ entry.context.join(', ') }}</span>
+                    }
+                  </span>
+                  <span class="check-in-time">{{ time(entry.loggedAt) }}</span>
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      </ion-card-content>
+    </ion-card>
+  }
+</ion-content>

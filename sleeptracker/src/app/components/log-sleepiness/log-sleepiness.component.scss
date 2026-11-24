@@ -1,0 +1,93 @@
+.question {
+  margin: 4px 0 2px;
+  font-size: 1.375rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.scale-source {
+  margin: 0 0 14px;
+  font-size: 0.8125rem;
+  color: var(--app-text-muted);
+}
+
+.scale {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.scale-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 60px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1.5px solid var(--app-border);
+  background: var(--app-surface);
+  color: var(--ion-text-color);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+
+  &.selected {
+    border-color: var(--ion-color-primary);
+    background: rgba(var(--ion-color-primary-rgb), 0.12);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ion-color-primary);
+    outline-offset: 2px;
+  }
+}
+
+.scale-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  strong {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  span {
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    color: var(--app-text-secondary);
+  }
+}
+
+.scale-check {
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  color: var(--ion-color-primary);
+}
+
+.when-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+}
+
+.when-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--app-text-secondary);
+}
+
+.delete-button {
+  margin-top: 24px;
+}

@@ -1,0 +1,63 @@
+.intro {
+  margin: 0 0 16px;
+  color: var(--app-text-secondary);
+}
+
+.times {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.time-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 8px;
+  border-radius: var(--app-radius);
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+}
+
+.time-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--app-text-secondary);
+}
+
+.time-card:first-child .time-label ion-icon {
+  color: var(--ion-color-primary);
+}
+
+.time-card:last-child .time-label ion-icon {
+  color: var(--ion-color-secondary);
+}
+
+.time-date {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  font-size: 0.875rem;
+  color: var(--app-text-muted);
+}
+
+.total {
+  margin: 20px 0 0;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 650;
+
+  span {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--app-text-secondary);
+  }
+}
+
+.delete-button {
+  margin-top: 24px;
+}

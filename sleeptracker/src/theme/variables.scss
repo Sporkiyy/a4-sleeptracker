@@ -1,2 +1,201 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
+//
+// Two palettes. The app opens in light from 6 AM and in the dark "night" theme from 6 PM
+// (see services/theme.service.ts); the sun/moon button at the top right switches between them,
+// and the app remembers that choice.
+// Dark covers the evening, bedtime, and the night, when a burst of bright light is least
+// welcome. The dark palette applies whenever <html> has the `ion-palette-dark` class.
+// Every text color below meets WCAG AA (4.5:1) against the surfaces it is used on.
+@use "sass:color";
+@use "sass:math";
+
+@function rgb-list($c) {
+  @return math.round(color.channel($c, "red", $space: rgb)), math.round(color.channel($c, "green", $space: rgb)),
+    math.round(color.channel($c, "blue", $space: rgb));
+}
+
+// Background and text, plus (for the dark theme) the neutral steps Ionic derives many shades
+// from. The light theme leaves the steps out so Ionic uses its own light-tuned defaults.
+@mixin base-colors($bg, $text, $steps: true) {
+  --ion-background-color: #{$bg};
+  --ion-background-color-rgb: #{rgb-list($bg)};
+  --ion-text-color: #{$text};
+  --ion-text-color-rgb: #{rgb-list($text)};
+
+  @if $steps {
+    @for $i from 1 through 19 {
+      $step: $i * 50;
+      --ion-background-color-step-#{$step}: #{color.mix($text, $bg, math.percentage(math.div($step, 1000)))};
+      --ion-text-color-step-#{$step}: #{color.mix($bg, $text, math.percentage(math.div($step, 1000)))};
+    }
+  }
+}
+
+// One Ionic named color, with shade and tint worked out the same way Ionic's color generator does.
+@mixin ion-color($name, $base, $contrast) {
+  --ion-color-#{$name}: #{$base};
+  --ion-color-#{$name}-rgb: #{rgb-list($base)};
+  --ion-color-#{$name}-contrast: #{$contrast};
+  --ion-color-#{$name}-contrast-rgb: #{rgb-list($contrast)};
+  --ion-color-#{$name}-shade: #{color.mix(#000, $base, 12%)};
+  --ion-color-#{$name}-tint: #{color.mix(#fff, $base, 10%)};
+}
+
+/* ---------- Light (daytime) ---------- */
+
+// A warm "daylight" palette to match its yellow-to-orange sleepiness scale, the way the dark
+// theme pairs navy backgrounds and violet accents with its violet scale.
+$light-bg: #faf5ec;
+$light-text: #22190f;
+$light-surface: #fffdf8;
+$light-border: #eadcc6;
+$light-muted: #76614a;
+$light-primary: #b0500a;
+
+:root,
+:root.ios,
+:root.md {
+  @include base-colors($light-bg, $light-text, $steps: false);
+
+  --ion-item-background: #{$light-surface};
+  --ion-card-background: #{$light-surface};
+  --ion-toolbar-background: #{$light-bg};
+  --ion-toolbar-border-color: #{$light-border};
+  --ion-tab-bar-background: #fffaf2;
+  --ion-tab-bar-border-color: #{$light-border};
+  --ion-tab-bar-color: #{$light-muted};
+  --ion-tab-bar-color-selected: #{$light-primary};
+  --ion-border-color: #{$light-border};
+  --ion-item-border-color: #{$light-border};
+  --ion-placeholder-color: #{$light-muted};
+  --ion-overlay-background-color: #{$light-surface};
+
+  @include ion-color(primary, $light-primary, #ffffff); // burnt orange
+  @include ion-color(secondary, #f2b01e, $light-text); // golden yellow: wake-up / "sun" actions
+  @include ion-color(tertiary, #d77500, $light-text);
+  @include ion-color(success, #2f7d32, #ffffff);
+  @include ion-color(warning, #f2b01e, $light-text);
+  @include ion-color(danger, #b42318, #ffffff);
+  @include ion-color(medium, $light-muted, #ffffff);
+  @include ion-color(light, #fbf6ee, $light-text); // iOS date/time pickers use this as their background
+
+  /* App tokens */
+  --app-surface: #{$light-surface};
+  --app-surface-raised: #f5ecdd;
+  --app-border: #{$light-border};
+  --app-text-secondary: #5a4632;
+  --app-text-muted: #{$light-muted};
+  --app-callout-error-text: #8c1f17;
+  --app-callout-info-text: #7a3a06;
+  --app-picker-highlight: #f3e8d7;
+  --app-night-icon: #9a4a06;
+  --app-night-icon-bg: rgba(215, 117, 0, 0.16);
+  // A dark toast stands out against the light screens.
+  --app-toast-background: #3b2c1c;
+  --app-toast-color: #{$light-bg};
+  --app-toast-button: #ffc46b;
+  --app-radius: 16px;
+
+  /*
+   * Stanford Sleepiness Scale, levels 1-7: a light-yellow to dark-orange ordinal ramp that
+   * gets steadily darker as sleepiness rises, so "wide awake" reads bright and sunny and
+   * "nodding off" stands out most. There is a larger step between 3 and 4, where the scale
+   * starts to signal sleep debt. Each level has a matching label color that keeps the number
+   * inside the badge at WCAG AA contrast.
+   */
+  --sss-1: #fcf2a2;
+  --sss-2: #f8de73;
+  --sss-3: #f9c635;
+  --sss-4: #e69301;
+  --sss-5: #d77500;
+  --sss-6: #ba5702;
+  --sss-7: #a24100;
+  --sss-ink-1: #{$light-text};
+  --sss-ink-2: #{$light-text};
+  --sss-ink-3: #{$light-text};
+  --sss-ink-4: #{$light-text};
+  --sss-ink-5: #{$light-text};
+  --sss-ink-6: #ffffff;
+  --sss-ink-7: #ffffff;
+}
+
+/* ---------- Dark (evening and night) ---------- */
+
+$dark-bg: #0b0f1e;
+$dark-text: #eef0fa;
+$dark-surface: #151a2d;
+$dark-border: #262d47;
+$dark-muted: #9097b1;
+
+:root.ion-palette-dark,
+:root.ion-palette-dark.ios,
+:root.ion-palette-dark.md {
+  @include base-colors($dark-bg, $dark-text);
+
+  --ion-item-background: #{$dark-surface};
+  --ion-card-background: #{$dark-surface};
+  --ion-toolbar-background: #{$dark-bg};
+  --ion-toolbar-border-color: #{$dark-border};
+  --ion-tab-bar-background: #0e1324;
+  --ion-tab-bar-border-color: #{$dark-border};
+  --ion-tab-bar-color: #{$dark-muted};
+  --ion-tab-bar-color-selected: #9aa5ff;
+  --ion-border-color: #{$dark-border};
+  --ion-item-border-color: #{$dark-border};
+  --ion-placeholder-color: #{$dark-muted};
+  --ion-overlay-background-color: #1a2036;
+
+  @include ion-color(primary, #9aa5ff, $dark-bg);
+  @include ion-color(secondary, #ffc46b, $dark-bg); // warm amber: wake-up / "sun" actions
+  @include ion-color(tertiary, #aa8fff, $dark-bg);
+  @include ion-color(success, #5fd39a, $dark-bg);
+  @include ion-color(warning, #ffc46b, $dark-bg);
+  @include ion-color(danger, #ff8080, $dark-bg);
+  @include ion-color(medium, $dark-muted, $dark-bg);
+  @include ion-color(light, #1d2338, $dark-text);
+  @include ion-color(dark, $dark-text, $dark-bg);
+
+  /* App tokens */
+  --app-surface: #{$dark-surface};
+  --app-surface-raised: #1c2238;
+  --app-border: #{$dark-border};
+  --app-text-secondary: #b6bcd4;
+  --app-text-muted: #{$dark-muted};
+  --app-callout-error-text: #ffc2c2;
+  --app-callout-info-text: #d4d9ff;
+  --app-picker-highlight: var(--ion-background-color-step-150);
+  --app-night-icon: #8fbaf3;
+  --app-night-icon-bg: rgba(57, 135, 229, 0.18);
+  --app-toast-background: #1c2238;
+  --app-toast-color: #{$dark-text};
+  --app-toast-button: #9aa5ff;
+
+  /*
+   * On the dark background, a single-hue violet ramp that gets lighter as sleepiness rises so
+   * the sleepiest moments stand out, again with the larger step between 3 and 4. Each level
+   * has a label color that keeps its number at WCAG AA contrast.
+   */
+  --sss-1: #5c3ca4;
+  --sss-2: #6d4fb9;
+  --sss-3: #8063cf;
+  --sss-4: #aa8fff;
+  --sss-5: #bcaaff;
+  --sss-6: #cfc5fe;
+  --sss-7: #e3defe;
+  --sss-ink-1: #ffffff;
+  --sss-ink-2: #ffffff;
+  --sss-ink-3: #ffffff;
+  --sss-ink-4: #{$dark-bg};
+  --sss-ink-5: #{$dark-bg};
+  --sss-ink-6: #{$dark-bg};
+  --sss-ink-7: #{$dark-bg};
+}
+
+// In the dark theme, modals use the page background too (Ionic's dark palette lightens them on iOS).
+:root.ion-palette-dark.ios ion-modal,
+:root.ion-palette-dark.md ion-modal {
+  --ion-background-color: #{$dark-bg};
+  --ion-toolbar-background: #{$dark-bg};
+  --ion-toolbar-border-color: #{$dark-border};
+}

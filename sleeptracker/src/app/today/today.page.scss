@@ -1,0 +1,130 @@
+.night-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 24px 16px;
+  padding: 32px 20px 16px;
+  border-radius: 24px;
+  text-align: center;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+
+  .callout {
+    text-align: left;
+  }
+}
+
+.night-moon {
+  margin-bottom: 12px;
+  font-size: 3rem;
+  color: var(--ion-color-primary);
+}
+
+.night-wake {
+  width: 100%;
+  margin-top: 28px;
+}
+
+.night-summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.sleep-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 16px;
+
+  ion-button {
+    margin: 0;
+    height: 48px;
+  }
+}
+
+.quick-scale {
+  display: flex;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.quick-level {
+  flex: 1;
+  min-width: 0;
+  height: 48px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--sss-fill);
+  color: var(--sss-ink);
+  font: inherit;
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:active {
+    transform: scale(0.94);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ion-text-color);
+    outline-offset: 2px;
+  }
+}
+
+.quick-scale-ends {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 0.75rem;
+  color: var(--app-text-muted);
+}
+
+.subhead {
+  margin: 18px 0 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--app-text-secondary);
+}
+
+.check-in-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.check-in-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 48px;
+  padding: 6px 0;
+  border: 0;
+  border-bottom: 1px solid var(--app-border);
+  background: none;
+  color: var(--ion-text-color);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+li:last-child .check-in-row {
+  border-bottom: 0;
+}
+
+.check-in-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  span {
+    font-size: 0.8125rem;
+    color: var(--app-text-secondary);
+  }
+}
+
+.check-in-time {
+  font-size: 0.875rem;
+  color: var(--app-text-secondary);
+}

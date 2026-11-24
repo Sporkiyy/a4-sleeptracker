@@ -1,0 +1,91 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>{{ title }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" [forceOverscroll]="false">
+  @if (mode === 'timer') {
+    <p class="intro">Here's what your sleep timer recorded. Fix anything that's off, then save.</p>
+  }
+
+  <div class="times">
+    <div class="time-card">
+      <span class="time-label"><ion-icon name="moon" aria-hidden="true"></ion-icon> Went to bed</span>
+      <ion-datetime-button datetime="log-sleep-bed"></ion-datetime-button>
+      <span class="time-date">{{ bedDateLabel() }}</span>
+    </div>
+    <div class="time-card">
+      <span class="time-label"><ion-icon name="sunny" aria-hidden="true"></ion-icon> Woke up</span>
+      <ion-datetime-button datetime="log-sleep-wake"></ion-datetime-button>
+      <ion-datetime-button class="date-chip" datetime="log-sleep-wake-day"></ion-datetime-button>
+    </div>
+  </div>
+
+  <p class="total" aria-live="polite">{{ durationLabel() }} <span>asleep</span></p>
+
+  @if (error(); as message) {
+    <p class="callout callout-error" role="alert">
+      <ion-icon name="warning-outline" aria-hidden="true"></ion-icon>
+      <span>{{ message }}</span>
+    </p>
+  } @else {
+    @if (replaces(); as existing) {
+      <p class="callout callout-info">
+        <ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>
+        <span>You already logged a night ending {{ dayLabel(existing.sleepEnd) }} ({{ existing.timeRangeString() }}). Saving will replace it.</span>
+      </p>
+    }
+  }
+
+  <h2 class="field-label" id="quality-label">How did you sleep? <span>Optional</span></h2>
+  <div class="segmented" role="group" aria-labelledby="quality-label">
+    @for (option of qualityOptions; track option) {
+      <button type="button" [attr.aria-pressed]="quality() === option" (click)="setQuality(option)">
+        {{ qualityLabel(option) }}
+      </button>
+    }
+  </div>
+
+  @if (mode === 'edit') {
+    <ion-button class="delete-button" fill="clear" color="danger" expand="block" (click)="remove()">
+      <ion-icon slot="start" name="trash-outline" aria-hidden="true"></ion-icon>
+      Delete this night
+    </ion-button>
+  }
+
+  <!-- Pickers opened by the time and date buttons above. -->
+  <ion-popover class="picker-popover" [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="log-sleep-bed" presentation="time" [value]="bedValue()" [showDefaultButtons]="true" (ionChange)="onBedTime($event)"></ion-datetime>
+    </ng-template>
+  </ion-popover>
+  <ion-popover class="picker-popover" [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="log-sleep-wake" presentation="time" [value]="wakeValue()" [showDefaultButtons]="true" (ionChange)="onWakeTime($event)"></ion-datetime>
+    </ng-template>
+  </ion-popover>
+  <ion-popover #wakeDayPicker class="picker-popover calendar-popover" [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime
+        id="log-sleep-wake-day"
+        presentation="date"
+        [max]="today"
+        [formatOptions]="dayFormat"
+        [value]="wakeDayValue()"
+        (ionChange)="onWakeDay($event, wakeDayPicker)"
+      ></ion-datetime>
+    </ng-template>
+  </ion-popover>
+</ion-content>
+
+<ion-footer class="action-footer">
+  <div class="action-footer-inner">
+    <ion-button expand="block" [disabled]="!!error() || saving()" (click)="save()">
+      {{ mode === 'edit' ? 'Save changes' : 'Save sleep' }}
+    </ion-button>
+  </div>
+</ion-footer>
